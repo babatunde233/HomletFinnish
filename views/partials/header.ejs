@@ -48,7 +48,7 @@
                     <li><a href="/houses" class="nav-link">Browse Properties</a></li>
                     <li>
                         <form action="/auth/logout" method="POST" class="logout-form">
-                            <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirmLogout()">Logout</button>
                         </form>
                     </li>
                 <% } else { %>

@@ -6,6 +6,40 @@ const Property = require('../models/Property');
 const Deal = require('../models/Deal');
 const Rating = require('../models/Rating');
 
+// Admin login page
+router.get('/login', (req, res) => {
+  res.render('admin/login', { title: 'Admin Login' });
+});
+
+// Handle admin login
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    
+    // Check if user exists and is admin
+    const user = await User.findOne({ email, role: 'admin' });
+    
+    if (!user || !(await user.comparePassword(password))) {
+      req.flash('error_msg', 'Invalid admin credentials');
+      return res.redirect('/admin/login');
+    }
+
+    req.session.user = {
+      _id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role
+    };
+
+    req.flash('success_msg', 'Welcome to admin panel');
+    res.redirect('/admin/dashboard');
+  } catch (error) {
+    console.error('Admin login error:', error);
+    req.flash('error_msg', 'Login failed');
+    res.redirect('/admin/login');
+  }
+});
+
 // Admin dashboard
 router.get('/dashboard', isAuthenticated, isAdmin, async (req, res) => {
   try {

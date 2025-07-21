@@ -15,7 +15,7 @@ html {
 
 body {
     font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 15%, #16213e 35%, #0f3460 65%, #533483 85%, #0a1428 100%);
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #1e3a8a 75%, #1f2937 100%);
     background-attachment: fixed;
     color: #ffffff;
     line-height: 1.7;

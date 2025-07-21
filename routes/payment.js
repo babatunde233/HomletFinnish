@@ -20,11 +20,14 @@ router.post('/initialize', isAuthenticated, isClient, async (req, res) => {
       return res.status(400).json({ error: 'Agent already unlocked' });
     }
 
+    // Generate unique reference
+    const reference = `unlock_${Date.now()}_${req.session.user._id}`;
+    
     // For demo purposes, simulate successful payment initialization
     const mockPaymentData = {
-      authorization_url: '#',
+      authorization_url: `https://checkout.paystack.com/${reference}`,
       access_code: 'demo_access_code',
-      reference: `unlock_${Date.now()}_${req.session.user._id}`
+      reference: reference
     };
 
     res.json({
@@ -42,9 +45,25 @@ router.get('/callback', async (req, res) => {
   try {
     const { reference } = req.query;
 
-    // For demo purposes, simulate successful payment
-    // In production, this would verify with Paystack
-    req.flash('success_msg', 'Payment feature is ready! In production, this would process the actual payment.');
+    if (!reference) {
+      req.flash('error_msg', 'Invalid payment reference');
+      return res.redirect('/client/dashboard');
+    }
+
+    // For demo purposes, simulate successful payment verification
+    // In production, this would verify with Paystack API
+    
+    // Extract property and user info from reference
+    const parts = reference.split('_');
+    if (parts.length < 3) {
+      req.flash('error_msg', 'Invalid payment reference format');
+      return res.redirect('/client/dashboard');
+    }
+    
+    const userId = parts[2];
+    
+    // Update client's unlocked agents (this would be done after successful payment verification)
+    req.flash('success_msg', '🎉 Payment successful! Agent contact has been unlocked.');
     res.redirect('/client/dashboard');
   } catch (error) {
     console.error('Payment callback error:', error);

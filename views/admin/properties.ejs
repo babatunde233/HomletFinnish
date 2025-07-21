@@ -1,69 +1,57 @@
 <%- include('../partials/header') %>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Manage Properties</h1>
-        <p class="text-gray-600 mt-2">View and manage all properties on the platform</p>
+<div class="container" style="padding: 2rem 0;">
+    <div style="margin-bottom: 2rem;">
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; color: #667eea;">🏠 Manage Properties</h1>
+        <p style="color: rgba(255, 255, 255, 0.8);">View and manage all properties on the platform</p>
     </div>
 
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="px-6 py-4 bg-gray-50 border-b">
-            <h2 class="text-lg font-semibold text-gray-900">All Properties</h2>
+    <div class="card">
+        <div style="padding: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+            <h2 style="font-size: 1.5rem; color: #667eea; margin: 0;">All Properties</h2>
         </div>
         
         <% if (properties && properties.length > 0) { %>
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="bg-gray-50">
+            <div class="table-container">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Agent</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Views</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Listed</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <th>Property</th>
+                            <th>Agent</th>
+                            <th>Location</th>
+                            <th>Price</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Views</th>
+                            <th>Listed</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody>
                         <% properties.forEach(property => { %>
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <img src="/uploads/properties/<%= property.images[0] %>" alt="<%= property.title %>" class="w-10 h-10 rounded-lg object-cover mr-3">
+                                <td>
+                                    <div style="display: flex; align-items: center;">
+                                        <img src="/uploads/properties/<%= property.images[0] %>" alt="<%= property.title %>" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover; margin-right: 1rem;">
                                         <div>
-                                            <p class="text-sm font-medium text-gray-900"><%= property.title %></p>
-                                            <p class="text-sm text-gray-500"><%= property.description.substring(0, 50) %>...</p>
+                                            <p style="font-weight: 600; color: #ffffff; margin: 0;"><%= property.title %></p>
+                                            <p style="font-size: 0.875rem; color: rgba(255, 255, 255, 0.7); margin: 0;"><%= property.description.substring(0, 50) %>...</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    <%= property.agent.fullName %>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    <%= property.location.area %>, <%= property.location.state %>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    ₦<%= property.price.toLocaleString() %>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    <%= property.propertyType === 'rent' ? 'For Rent' : 'For Sale' %>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 py-1 text-xs rounded-full <%= property.status === 'active' ? 'bg-green-100 text-green-800' : property.status === 'sold' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800' %>">
+                                <td style="color: rgba(255, 255, 255, 0.8);"><%= property.agent.fullName %></td>
+                                <td style="color: rgba(255, 255, 255, 0.8);"><%= property.location.area %>, <%= property.location.state %></td>
+                                <td style="color: #51cf66; font-weight: 600;">₦<%= property.price.toLocaleString() %></td>
+                                <td style="color: rgba(255, 255, 255, 0.8);"><%= property.propertyType === 'rent' ? 'For Rent' : 'For Sale' %></td>
+                                <td>
+                                    <span style="padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; <%= property.status === 'active' ? 'background: rgba(81, 207, 102, 0.2); color: #51cf66;' : property.status === 'sold' ? 'background: rgba(255, 107, 107, 0.2); color: #ff6b6b;' : 'background: rgba(255, 212, 59, 0.2); color: #ffd43b;' %>">
                                         <%= property.status.charAt(0).toUpperCase() + property.status.slice(1) %>
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    <%= property.views %>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <%= new Date(property.createdAt).toLocaleDateString() %>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="/property/<%= property._id %>" class="text-blue-600 hover:text-blue-800">View</a>
+                                <td style="color: #667eea; font-weight: 600;"><%= property.views %></td>
+                                <td style="color: rgba(255, 255, 255, 0.6);"><%= new Date(property.createdAt).toLocaleDateString() %></td>
+                                <td>
+                                    <a href="/property/<%= property._id %>" class="btn btn-sm btn-primary">View</a>
                                 </td>
                             </tr>
                         <% }); %>
@@ -71,19 +59,18 @@
                 </table>
             </div>
         <% } else { %>
-            <div class="px-6 py-12 text-center">
-                <div class="text-gray-500">
-                    <p class="text-xl mb-4">No properties found</p>
+            <div style="padding: 3rem; text-center;">
+                <div style="color: rgba(255, 255, 255, 0.7);">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🏠</div>
+                    <p style="font-size: 1.25rem; margin-bottom: 1rem;">No properties found</p>
                     <p>Properties will appear here when agents upload them</p>
                 </div>
             </div>
         <% } %>
     </div>
 
-    <div class="mt-8 text-center">
-        <a href="/admin/dashboard" class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition duration-300">
-            Back to Dashboard
-        </a>
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="/admin/dashboard" class="btn btn-primary btn-lg">← Back to Dashboard</a>
     </div>
 </div>
 

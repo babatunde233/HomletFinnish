@@ -22,7 +22,8 @@ router.post('/login', [
 
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    // Exclude admin users from regular login
+    const user = await User.findOne({ email, role: { $ne: 'admin' } });
 
     if (!user || !(await user.comparePassword(password))) {
       req.flash('error_msg', 'Invalid credentials');
@@ -43,9 +44,6 @@ router.post('/login', [
         break;
       case 'agent':
         res.redirect('/agent/dashboard');
-        break;
-      case 'admin':
-        res.redirect('/admin/dashboard');
         break;
       default:
         res.redirect('/');

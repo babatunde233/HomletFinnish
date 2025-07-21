@@ -13,7 +13,7 @@
         <form action="/admin/login" method="POST">
             <div class="form-group">
                 <label for="email" class="form-label">Admin Email</label>
-                <input id="email" name="email" type="email" autocomplete="email" required class="form-input" placeholder="admin@example.com">
+                <input id="email" name="email" type="email" autocomplete="email" required class="form-input" placeholder="Enter admin email">
             </div>
 
             <div class="form-group">
@@ -24,26 +24,8 @@
             <button type="submit" class="btn btn-primary w-full">Access Admin Panel</button>
         </form>
 
-        <div style="margin-top: 2rem;">
-            <div style="position: relative; margin: 1.5rem 0;">
-                <div style="position: absolute; inset: 0; display: flex; align-items: center;">
-                    <div style="width: 100%; border-top: 1px solid rgba(255, 255, 255, 0.3);"></div>
-                </div>
-                <div style="position: relative; display: flex; justify-content: center;">
-                    <span style="background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0a1428 100%); padding: 0 1rem; color: rgba(255, 255, 255, 0.7);">Default Credentials</span>
-                </div>
-            </div>
-
-            <div style="background: rgba(102, 126, 234, 0.1); border: 1px solid rgba(102, 126, 234, 0.3); border-radius: 8px; padding: 1rem; margin-top: 1rem;">
-                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; text-align: center;">
-                    <strong>Email:</strong> admin@example.com<br>
-                    <strong>Password:</strong> password123
-                </p>
-            </div>
-
-            <div style="text-align: center; margin-top: 1.5rem;">
-                <a href="/" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">← Back to Homepage</a>
-            </div>
+        <div style="text-align: center; margin-top: 1.5rem;">
+            <a href="/auth/login" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">← Back to User Login</a>
         </div>
     </div>
 </div>

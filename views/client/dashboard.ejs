@@ -173,6 +173,10 @@
 
 <script>
 function unlockAgent(propertyId) {
+    if (!confirm('Are you sure you want to unlock this agent\'s contact for ₦2,000?')) {
+        return;
+    }
+    
     // Show loading state
     const button = event.target;
     const originalText = button.innerHTML;
@@ -189,20 +193,34 @@ function unlockAgent(propertyId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Use a simple redirect for payment since Paystack might not be configured
-            alert('Payment feature is ready! In production, this would redirect to Paystack payment page.');
-            // For demo purposes, we'll simulate successful payment
-            window.location.href = `/property/${propertyId}`;
+            // Initialize Paystack payment
+            let handler = PaystackPop.setup({
+                key: 'pk_test_your_public_key_here', // Replace with your public key
+                email: '<%= user.email %>',
+                amount: 200000, // ₦2,000 in kobo
+                currency: 'NGN',
+                ref: data.data.reference,
+                callback: function(response) {
+                    // Payment successful
+                    alert('🎉 Payment successful! Agent contact has been unlocked.');
+                    window.location.reload();
+                },
+                onClose: function() {
+                    // Payment cancelled
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }
+            });
+            handler.openIframe();
         } else {
-            alert('Error: ' + (data.error || 'Payment initialization failed'));
+            alert('❌ Error: ' + (data.error || 'Payment initialization failed'));
+            button.innerHTML = originalText;
+            button.disabled = false;
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Payment initialization failed. Please try again.');
-    })
-    .finally(() => {
-        // Restore button state
+        alert('❌ Payment initialization failed. Please try again.');
         button.innerHTML = originalText;
         button.disabled = false;
     });
