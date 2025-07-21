@@ -1,0 +1,99 @@
+<%- include('../partials/header') %>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Manage Agents</h1>
+        <p class="text-gray-600 mt-2">View and manage all registered agents</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b">
+            <h2 class="text-lg font-semibold text-gray-900">All Agents</h2>
+        </div>
+        
+        <% if (agents && agents.length > 0) { %>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Agent</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Commission</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rating</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <% agents.forEach(agent => { %>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <% if (agent.profilePicture) { %>
+                                            <img src="/uploads/profiles/<%= agent.profilePicture %>" alt="<%= agent.fullName %>" class="w-10 h-10 rounded-full object-cover mr-3">
+                                        <% } else { %>
+                                            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                                                <span class="text-green-600 font-medium"><%= agent.fullName.charAt(0) %></span>
+                                            </div>
+                                        <% } %>
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-900"><%= agent.fullName %></p>
+                                            <p class="text-sm text-gray-500"><%= agent.email %></p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <%= agent.phone %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <%= agent.commission %>%
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <% if (agent.rating > 0) { %>
+                                        <div class="flex items-center">
+                                            <span class="text-yellow-500">★</span>
+                                            <span class="ml-1"><%= agent.rating.toFixed(1) %> (<%= agent.totalRatings %>)</span>
+                                        </div>
+                                    <% } else { %>
+                                        <span class="text-gray-500">No ratings</span>
+                                    <% } %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 text-xs rounded-full <%= agent.isBlocked ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' %>">
+                                        <%= agent.isBlocked ? 'Blocked' : 'Active' %>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <%= new Date(agent.createdAt).toLocaleDateString() %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <form action="/admin/toggle-agent/<%= agent._id %>" method="POST" class="inline">
+                                        <button type="submit" class="<%= agent.isBlocked ? 'text-green-600 hover:text-green-800' : 'text-red-600 hover:text-red-800' %>">
+                                            <%= agent.isBlocked ? 'Unblock' : 'Block' %>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <div class="px-6 py-12 text-center">
+                <div class="text-gray-500">
+                    <p class="text-xl mb-4">No agents found</p>
+                    <p>New agents will appear here when they register</p>
+                </div>
+            </div>
+        <% } %>
+    </div>
+
+    <div class="mt-8 text-center">
+        <a href="/admin/dashboard" class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition duration-300">
+            Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

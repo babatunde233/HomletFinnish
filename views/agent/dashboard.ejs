@@ -1,0 +1,244 @@
+<%- include('../partials/header') %>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Welcome back, <%= agent.fullName %>!</h1>
+        <p class="text-gray-600 mt-2">Manage your properties and track your performance</p>
+        
+        <% if (agent.isBlocked) { %>
+            <div class="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                <strong>Account Blocked:</strong> Your account is blocked due to unpaid commissions. Please contact admin to resolve.
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center">
+                <div class="bg-blue-100 rounded-full p-3 mr-4">
+                    <span class="text-blue-600 text-xl">🏠</span>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Properties Listed</p>
+                    <p class="text-2xl font-bold text-gray-900"><%= properties.length %></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center">
+                <div class="bg-green-100 rounded-full p-3 mr-4">
+                    <span class="text-green-600 text-xl">💰</span>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Commission Rate</p>
+                    <p class="text-2xl font-bold text-gray-900"><%= agent.commission %>%</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center">
+                <div class="bg-yellow-100 rounded-full p-3 mr-4">
+                    <span class="text-yellow-600 text-xl">⭐</span>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Rating</p>
+                    <p class="text-2xl font-bold text-gray-900"><%= agent.rating > 0 ? agent.rating.toFixed(1) : 'N/A' %></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center">
+                <div class="bg-purple-100 rounded-full p-3 mr-4">
+                    <span class="text-purple-600 text-xl">📈</span>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Total Reviews</p>
+                    <p class="text-2xl font-bold text-gray-900"><%= agent.totalRatings %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+        <div class="space-y-4 sm:space-y-0 sm:flex sm:space-x-4">
+            <% if (!agent.isBlocked) { %>
+                <a href="/agent/upload" class="block w-full sm:w-auto bg-blue-600 text-white text-center px-6 py-3 rounded-md hover:bg-blue-700 transition duration-300">
+                    Upload New Property
+                </a>
+            <% } %>
+            <a href="/houses" class="block w-full sm:w-auto bg-green-600 text-white text-center px-6 py-3 rounded-md hover:bg-green-700 transition duration-300">
+                View All Properties
+            </a>
+        </div>
+    </div>
+
+    <!-- Properties Section -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+        <div class="px-6 py-4 bg-gray-50 border-b">
+            <h2 class="text-lg font-semibold text-gray-900">Your Properties</h2>
+        </div>
+        
+        <% if (properties && properties.length > 0) { %>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Views</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <% properties.forEach(property => { %>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <img src="/uploads/properties/<%= property.images[0] %>" alt="<%= property.title %>" class="w-10 h-10 rounded-lg object-cover mr-3">
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-900"><%= property.title %></p>
+                                            <p class="text-sm text-gray-500"><%= property.description.substring(0, 50) %>...</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <%= property.location.area %>, <%= property.location.state %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    ₦<%= property.price.toLocaleString() %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <%= property.propertyType === 'rent' ? 'For Rent' : 'For Sale' %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 text-xs rounded-full <%= property.status === 'active' ? 'bg-green-100 text-green-800' : property.status === 'sold' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800' %>">
+                                        <%= property.status.charAt(0).toUpperCase() + property.status.slice(1) %>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <%= property.views %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                    <a href="/property/<%= property._id %>" class="text-blue-600 hover:text-blue-800">View</a>
+                                    <a href="/agent/edit/<%= property._id %>" class="text-yellow-600 hover:text-yellow-800">Edit</a>
+                                    <form action="/agent/delete/<%= property._id %>?_method=DELETE" method="POST" class="inline">
+                                        <button type="submit" onclick="return confirm('Are you sure you want to delete this property?')" class="text-red-600 hover:text-red-800">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <div class="px-6 py-12 text-center">
+                <div class="text-gray-500">
+                    <p class="text-xl mb-4">No properties listed yet</p>
+                    <% if (!agent.isBlocked) { %>
+                        <a href="/agent/upload" class="text-blue-600 hover:text-blue-800">Upload your first property</a>
+                    <% } %>
+                </div>
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Deals Section -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+        <div class="px-6 py-4 bg-gray-50 border-b">
+            <h2 class="text-lg font-semibold text-gray-900">Recent Deals</h2>
+        </div>
+        
+        <% if (deals && deals.length > 0) { %>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deal Value</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Commission</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <% deals.forEach(deal => { %>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <%= deal.property.title %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <%= deal.client.fullName %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    ₦<%= deal.dealValue.toLocaleString() %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    ₦<%= deal.commission.toLocaleString() %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 text-xs rounded-full <%= deal.status === 'closed' ? 'bg-green-100 text-green-800' : deal.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800' %>">
+                                        <%= deal.status.charAt(0).toUpperCase() + deal.status.slice(1) %>
+                                    </span>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <div class="px-6 py-12 text-center">
+                <div class="text-gray-500">
+                    <p class="text-xl mb-4">No deals yet</p>
+                    <p>Deals will appear here when clients interact with your properties</p>
+                </div>
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b">
+            <h2 class="text-lg font-semibold text-gray-900">Recent Reviews</h2>
+        </div>
+        
+        <% if (ratings && ratings.length > 0) { %>
+            <div class="p-6 space-y-4">
+                <% ratings.forEach(rating => { %>
+                    <div class="border-b border-gray-200 pb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center">
+                                <span class="font-medium text-gray-900"><%= rating.client.fullName %></span>
+                                <div class="flex items-center ml-2">
+                                    <% for (let i = 1; i <= 5; i++) { %>
+                                        <span class="text-sm <%= i <= rating.rating ? 'text-yellow-500' : 'text-gray-300' %>">★</span>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <span class="text-sm text-gray-500"><%= new Date(rating.createdAt).toLocaleDateString() %></span>
+                        </div>
+                        <p class="text-gray-700"><%= rating.comment %></p>
+                        <p class="text-sm text-gray-500 mt-1">Property: <%= rating.property.title %></p>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="px-6 py-12 text-center">
+                <div class="text-gray-500">
+                    <p class="text-xl mb-4">No reviews yet</p>
+                    <p>Reviews from clients will appear here</p>
+                </div>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

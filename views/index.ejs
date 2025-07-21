@@ -1,0 +1,121 @@
+<%- include('partials/header') %>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <h1>Find Your Perfect Home</h1>
+        <p>Connect with trusted real estate agents and discover your dream property with HomLet</p>
+        <div class="hero-buttons">
+            <a href="/houses" class="btn btn-primary btn-lg">🏠 Find a House</a>
+            <a href="/auth/agent-register" class="btn btn-secondary btn-lg">Become an Agent</a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section style="padding: 4rem 0;">
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: #667eea;">What is HomLet?</h2>
+            <p style="font-size: 1.25rem; color: rgba(255, 255, 255, 0.8); max-width: 600px; margin: 0 auto;">
+                HomLet is a revolutionary platform that connects property seekers with verified real estate agents. 
+                We make it easy to find your perfect home while ensuring agents get fair compensation.
+            </p>
+        </div>
+        
+        <div class="grid grid-3">
+            <div class="card text-center">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🏡</div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #667eea;">Browse Properties</h3>
+                <p style="color: rgba(255, 255, 255, 0.8);">Explore thousands of properties with detailed photos and videos from verified agents</p>
+            </div>
+            
+            <div class="card text-center">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">👥</div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #667eea;">Connect with Agents</h3>
+                <p style="color: rgba(255, 255, 255, 0.8);">Get direct access to verified real estate professionals for just ₦2,000</p>
+            </div>
+            
+            <div class="card text-center">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">💰</div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #667eea;">Secure Payments</h3>
+                <p style="color: rgba(255, 255, 255, 0.8);">Safe and secure payment system with transparent pricing and no hidden fees</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Properties -->
+<% if (typeof featuredProperties !== 'undefined' && featuredProperties && featuredProperties.length > 0) { %>
+<section style="padding: 4rem 0; background: rgba(255, 255, 255, 0.02); border-radius: 20px; margin: 2rem;">
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: #667eea;">Featured Properties</h2>
+            <p style="font-size: 1.25rem; color: rgba(255, 255, 255, 0.8);">Discover some of our most popular listings</p>
+        </div>
+        
+        <div class="grid grid-3">
+            <% featuredProperties.forEach(property => { %>
+                <div class="property-card">
+                    <img src="/uploads/properties/<%= property.images[0] %>" alt="<%= property.title %>">
+                    <div class="property-card-content">
+                        <h3 class="property-title"><%= property.title %></h3>
+                        <p class="property-location">📍 <%= property.location.area %>, <%= property.location.state %></p>
+                        <p class="property-price">₦<%= property.price.toLocaleString() %></p>
+                        <p class="property-description"><%= property.description.substring(0, 100) %>...</p>
+                        <a href="/property/<%= property._id %>" class="btn btn-primary w-full">View Details</a>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="/houses" class="btn btn-primary btn-lg">View All Properties</a>
+        </div>
+    </div>
+</section>
+<% } %>
+
+<!-- How It Works Section -->
+<section style="padding: 4rem 0;">
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: #667eea;">How HomLet Works</h2>
+            <p style="font-size: 1.25rem; color: rgba(255, 255, 255, 0.8);">Simple steps to find your perfect property</p>
+        </div>
+        
+        <div class="grid grid-3">
+            <div class="card text-center">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">1️⃣</div>
+                <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: #ffffff;">Browse Properties</h3>
+                <p style="color: rgba(255, 255, 255, 0.8);">Search through thousands of verified property listings with photos and videos</p>
+            </div>
+            
+            <div class="card text-center">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">2️⃣</div>
+                <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: #ffffff;">Unlock Agent Contact</h3>
+                <p style="color: rgba(255, 255, 255, 0.8);">Pay ₦2,000 to unlock verified agent contact information</p>
+            </div>
+            
+            <div class="card text-center">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">3️⃣</div>
+                <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: #ffffff;">Connect & Close</h3>
+                <p style="color: rgba(255, 255, 255, 0.8);">Contact the agent directly and close your property deal</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section style="padding: 4rem 0; background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); margin: 2rem; border-radius: 20px;">
+    <div class="container text-center">
+        <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: #667eea;">Ready to Find Your Dream Home?</h2>
+        <p style="font-size: 1.25rem; margin-bottom: 2rem; color: rgba(255, 255, 255, 0.8);">Join thousands of satisfied customers who found their perfect property through HomLet</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="/auth/client-register" class="btn btn-primary btn-lg">Get Started as Client</a>
+            <a href="/auth/agent-register" class="btn btn-secondary btn-lg">Join as Agent</a>
+        </div>
+    </div>
+</section>
+
+<%- include('partials/footer') %>

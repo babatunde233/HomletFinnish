@@ -1,0 +1,86 @@
+</main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <!-- Company Info -->
+                <div class="footer-section">
+                    <h3 class="footer-title">🏠 HomLet</h3>
+                    <p class="footer-description">
+                        Your trusted platform for connecting with verified real estate agents 
+                        and finding the perfect property. Making property search simple and secure.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link">📧</a>
+                        <a href="#" class="social-link">📱</a>
+                        <a href="#" class="social-link">🌐</a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/houses">Find Properties</a></li>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- For Users -->
+                <div class="footer-section">
+                    <h3 class="footer-title">Get Started</h3>
+                    <ul class="footer-links">
+                        <li><a href="/auth/client-register">Register as Client</a></li>
+                        <li><a href="/auth/agent-register">Become an Agent</a></li>
+                        <li><a href="/auth/login">Login</a></li>
+                        <li><a href="/admin/login">Admin Access</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Info -->
+                <div class="footer-section">
+                    <h3 class="footer-title">Contact Info</h3>
+                    <div class="contact-info">
+                        <p>📧 support@homlet.com</p>
+                        <p>📞 +234 800 HOMLET</p>
+                        <p>📍 Lagos, Nigeria</p>
+                        <p>🕒 24/7 Support</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>&copy; 2024 HomLet. All rights reserved.</p>
+                    <p>Built with ❤️ for property seekers and real estate professionals</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="/js/main.js"></script>
+    
+    <!-- Mobile Menu Script -->
+    <script>
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('mobile-active');
+        }
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('.nav');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (!nav.contains(event.target)) {
+                navLinks.classList.remove('mobile-active');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<%- include('../partials/header') %>
+
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Payment History</h1>
+        <p class="text-gray-600 mt-2">View all your payment transactions</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b">
+            <h2 class="text-lg font-semibold text-gray-900">Transaction History</h2>
+        </div>
+        
+        <% if (client.paymentHistory && client.paymentHistory.length > 0) { %>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Agent</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reference</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <% client.paymentHistory.forEach(payment => { %>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <%= new Date(payment.date).toLocaleDateString() %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">
+                                    ₦<%= payment.amount.toLocaleString() %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <% if (payment.propertyId) { %>
+                                        <%= payment.propertyId.title || 'Property' %>
+                                    <% } else { %>
+                                        Property
+                                    <% } %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <% if (payment.agentId) { %>
+                                        <%= payment.agentId.fullName || 'Agent' %>
+                                    <% } else { %>
+                                        Agent
+                                    <% } %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <%= payment.reference %>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <div class="px-6 py-12 text-center">
+                <div class="text-gray-500">
+                    <p class="text-xl mb-4">No payment history found</p>
+                    <p>You haven't made any payments yet. <a href="/client/dashboard" class="text-blue-600 hover:text-blue-800">Browse properties</a> to get started.</p>
+                </div>
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Summary Card -->
+    <div class="mt-8 bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Payment Summary</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="text-center">
+                <p class="text-2xl font-bold text-blue-600"><%= client.paymentHistory.length %></p>
+                <p class="text-sm text-gray-600">Total Transactions</p>
+            </div>
+            <div class="text-center">
+                <p class="text-2xl font-bold text-green-600">₦<%= client.paymentHistory.reduce((sum, payment) => sum + payment.amount, 0).toLocaleString() %></p>
+                <p class="text-sm text-gray-600">Total Amount Spent</p>
+            </div>
+            <div class="text-center">
+                <p class="text-2xl font-bold text-purple-600"><%= client.unlockedAgents.length %></p>
+                <p class="text-sm text-gray-600">Agents Unlocked</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-8 text-center">
+        <a href="/client/dashboard" class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition duration-300">
+            Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

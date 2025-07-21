@@ -1,0 +1,212 @@
+<%- include('../partials/header') %>
+
+<div class="container" style="padding: 2rem 0;">
+    <div style="margin-bottom: 2rem;">
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; color: #667eea;">👋 Welcome back, <%= user.fullName %>!</h1>
+        <p style="color: rgba(255, 255, 255, 0.8);">Browse properties and connect with verified agents</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-icon">🏠</span>
+            <span class="stat-number"><%= properties.length %></span>
+            <span class="stat-label">Available Properties</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-icon">👥</span>
+            <span class="stat-number"><%= client.unlockedAgents.length %></span>
+            <span class="stat-label">Unlocked Agents</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-icon">💰</span>
+            <span class="stat-number">₦<%= (client.paymentHistory.reduce((sum, payment) => sum + payment.amount, 0)).toLocaleString() %></span>
+            <span class="stat-label">Total Spent</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-icon">📊</span>
+            <span class="stat-number"><%= client.paymentHistory.length %></span>
+            <span class="stat-label">Transactions</span>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card mb-4">
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #667eea;">Quick Actions</h2>
+        <div class="grid grid-4">
+            <a href="/client/payments" class="btn btn-primary">💳 Payment History</a>
+            <a href="/houses" class="btn btn-success">🔍 Browse All Properties</a>
+            <a href="/about" class="btn btn-secondary">ℹ️ About HomLet</a>
+            <a href="/contact" class="btn btn-warning">📞 Contact Support</a>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card mb-4">
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #667eea;">🔍 Filter Properties</h2>
+        <form method="GET" action="/client/dashboard" class="grid grid-5" style="gap: 1.5rem;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">State</label>
+                <input type="text" name="state" value="<%= typeof filters !== 'undefined' && filters.state ? filters.state : '' %>" placeholder="Enter state" class="form-input">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Area</label>
+                <input type="text" name="area" value="<%= typeof filters !== 'undefined' && filters.area ? filters.area : '' %>" placeholder="Enter area" class="form-input">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Min Price (₦)</label>
+                <input type="number" name="minPrice" value="<%= typeof filters !== 'undefined' && filters.minPrice ? filters.minPrice : '' %>" placeholder="Min price" class="form-input">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Max Price (₦)</label>
+                <input type="number" name="maxPrice" value="<%= typeof filters !== 'undefined' && filters.maxPrice ? filters.maxPrice : '' %>" placeholder="Max price" class="form-input">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Type</label>
+                <select name="type" class="form-input">
+                    <option value="">All Types</option>
+                    <option value="rent" <%= typeof filters !== 'undefined' && filters.type === 'rent' ? 'selected' : '' %>>For Rent</option>
+                    <option value="buy" <%= typeof filters !== 'undefined' && filters.type === 'buy' ? 'selected' : '' %>>For Sale</option>
+                </select>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; align-items: end; grid-column: 1 / -1;">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+                <a href="/client/dashboard" class="btn btn-secondary">Clear Filters</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Properties Grid -->
+    <div style="margin-bottom: 2rem;">
+        <h2 style="font-size: 1.8rem; margin-bottom: 1.5rem; color: #667eea;">🏠 Available Properties</h2>
+        
+        <div class="grid grid-3">
+            <% if (typeof properties !== 'undefined' && properties && properties.length > 0) { %>
+                <% properties.forEach(property => { %>
+                    <div class="property-card">
+                        <div class="property-image-container">
+                            <img src="/uploads/properties/<%= property.images[0] %>" alt="<%= property.title %>">
+                            <div class="property-badge">
+                                <%= property.propertyType === 'rent' ? 'For Rent' : 'For Sale' %>
+                            </div>
+                            <div class="property-views">
+                                👁️ <%= property.views %> views
+                            </div>
+                        </div>
+                        
+                        <div class="property-card-content">
+                            <h3 class="property-title"><%= property.title %></h3>
+                            <p class="property-location">📍 <%= property.location.area %>, <%= property.location.state %></p>
+                            <p class="property-price">₦<%= property.price.toLocaleString() %></p>
+                            <p class="property-description"><%= property.description.substring(0, 100) %>...</p>
+                            
+                            <div class="property-meta">
+                                <div class="property-agent">
+                                    <span>Agent: <%= property.agent.fullName %></span>
+                                </div>
+                                <div class="property-date">
+                                    <%= new Date(property.createdAt).toLocaleDateString() %>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+                                <a href="/property/<%= property._id %>" class="btn btn-primary" style="flex: 1;">View Details</a>
+                                
+                                <% if (client.unlockedAgents.some(agent => agent._id.toString() === property.agent._id.toString())) { %>
+                                    <div style="text-align: center;">
+                                        <div style="background: rgba(81, 207, 102, 0.2); color: #51cf66; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; margin-bottom: 0.5rem;">
+                                            ✅ Unlocked
+                                        </div>
+                                        <div style="font-weight: 600; color: #51cf66; font-size: 0.9rem;">
+                                            📞 <%= property.agent.phone %>
+                                        </div>
+                                        <a href="/client/rate/<%= property.agent._id %>" class="btn btn-warning btn-sm" style="margin-top: 0.5rem;">Rate Agent</a>
+                                    </div>
+                                <% } else { %>
+                                    <button onclick="unlockAgent('<%= property._id %>')" class="btn btn-success" style="white-space: nowrap;">
+                                        🔓 Unlock Agent<br><small>(₦2,000)</small>
+                                    </button>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 0;">
+                    <div style="color: rgba(255, 255, 255, 0.7);">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">🏠</div>
+                        <p style="font-size: 1.5rem; margin-bottom: 1rem;">No properties found matching your criteria</p>
+                        <p>Try adjusting your filters or <a href="/client/dashboard" style="color: #667eea;">browse all properties</a></p>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Unlocked Agents Section -->
+    <% if (client.unlockedAgents && client.unlockedAgents.length > 0) { %>
+        <div class="card">
+            <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #667eea;">👥 Your Unlocked Agents</h2>
+            <div class="grid grid-3">
+                <% client.unlockedAgents.forEach(agent => { %>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; text-align: center;">
+                        <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #51cf66, #40c057); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-weight: bold; font-size: 1.5rem;">
+                            <%= agent.fullName.charAt(0) %>
+                        </div>
+                        <h4 style="color: #ffffff; margin-bottom: 0.5rem;"><%= agent.fullName %></h4>
+                        <p style="color: #51cf66; font-weight: 600; margin-bottom: 1rem;">📞 <%= agent.phone %></p>
+                        <a href="/client/rate/<%= agent._id %>" class="btn btn-warning btn-sm">Rate Agent</a>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+<script>
+function unlockAgent(propertyId) {
+    // Show loading state
+    const button = event.target;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<span class="loading"></span> Processing...';
+    button.disabled = true;
+    
+    fetch('/payment/initialize', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ propertyId: propertyId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Use a simple redirect for payment since Paystack might not be configured
+            alert('Payment feature is ready! In production, this would redirect to Paystack payment page.');
+            // For demo purposes, we'll simulate successful payment
+            window.location.href = `/property/${propertyId}`;
+        } else {
+            alert('Error: ' + (data.error || 'Payment initialization failed'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Payment initialization failed. Please try again.');
+    })
+    .finally(() => {
+        // Restore button state
+        button.innerHTML = originalText;
+        button.disabled = false;
+    });
+}
+</script>
+
+<%- include('../partials/footer') %>
