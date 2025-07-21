@@ -2,7 +2,7 @@
 
 <div class="container" style="padding: 2rem 0;">
     <div style="margin-bottom: 2rem;">
-        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; color: #667eea;">👋 Welcome back, <%= user.fullName %>!</h1>
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; color: #4f46e5;">👋 Welcome back, <%= user.fullName %>!</h1>
         <p style="color: rgba(255, 255, 255, 0.8);">Browse properties and connect with verified agents</p>
     </div>
 
@@ -35,7 +35,7 @@
 
     <!-- Quick Actions -->
     <div class="card mb-4">
-        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #667eea;">Quick Actions</h2>
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #4f46e5;">Quick Actions</h2>
         <div class="grid grid-4">
             <a href="/client/payments" class="btn btn-primary">💳 Payment History</a>
             <a href="/houses" class="btn btn-success">🔍 Browse All Properties</a>
@@ -46,7 +46,7 @@
 
     <!-- Filters -->
     <div class="card mb-4">
-        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #667eea;">🔍 Filter Properties</h2>
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #4f46e5;">🔍 Filter Properties</h2>
         <form method="GET" action="/client/dashboard" class="grid grid-5" style="gap: 1.5rem;">
             <div class="form-group" style="margin-bottom: 0;">
                 <label class="form-label">State</label>
@@ -86,7 +86,7 @@
 
     <!-- Properties Grid -->
     <div style="margin-bottom: 2rem;">
-        <h2 style="font-size: 1.8rem; margin-bottom: 1.5rem; color: #667eea;">🏠 Available Properties</h2>
+        <h2 style="font-size: 1.8rem; margin-bottom: 1.5rem; color: #4f46e5;">🏠 Available Properties</h2>
         
         <div class="grid grid-3">
             <% if (typeof properties !== 'undefined' && properties && properties.length > 0) { %>
@@ -144,7 +144,7 @@
                     <div style="color: rgba(255, 255, 255, 0.7);">
                         <div style="font-size: 4rem; margin-bottom: 1rem;">🏠</div>
                         <p style="font-size: 1.5rem; margin-bottom: 1rem;">No properties found matching your criteria</p>
-                        <p>Try adjusting your filters or <a href="/client/dashboard" style="color: #667eea;">browse all properties</a></p>
+                        <p>Try adjusting your filters or <a href="/client/dashboard" style="color: #4f46e5;">browse all properties</a></p>
                     </div>
                 </div>
             <% } %>
@@ -154,10 +154,10 @@
     <!-- Unlocked Agents Section -->
     <% if (client.unlockedAgents && client.unlockedAgents.length > 0) { %>
         <div class="card">
-            <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #667eea;">👥 Your Unlocked Agents</h2>
+            <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #4f46e5;">👥 Your Unlocked Agents</h2>
             <div class="grid grid-3">
                 <% client.unlockedAgents.forEach(agent => { %>
-                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; text-align: center;">
+                    <div style="background: rgba(30, 30, 30, 0.8); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.05);">
                         <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #51cf66, #40c057); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-weight: bold; font-size: 1.5rem;">
                             <%= agent.fullName.charAt(0) %>
                         </div>
@@ -180,7 +180,7 @@ function unlockAgent(propertyId) {
     // Show loading state
     const button = event.target;
     const originalText = button.innerHTML;
-    button.innerHTML = '<span class="loading"></span> Processing...';
+    button.innerHTML = '<span style="display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top: 2px solid #fff; animation: spin 1s linear infinite;"></span> Processing...';
     button.disabled = true;
     
     fetch('/payment/initialize', {
@@ -226,5 +226,12 @@ function unlockAgent(propertyId) {
     });
 }
 </script>
+
+<style>
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
 
 <%- include('../partials/footer') %>

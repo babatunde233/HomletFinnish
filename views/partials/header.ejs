@@ -57,7 +57,18 @@
                     <li><a href="/houses" class="nav-link">Find Houses</a></li>
                     <li><a href="/about" class="nav-link">About</a></li>
                     <li><a href="/contact" class="nav-link">Contact</a></li>
-                    <li><a href="/auth/login" class="nav-link">Login</a></li>
+                    <li>
+                        <div style="position: relative; display: inline-block;">
+                            <button onclick="toggleLoginDropdown()" class="nav-link" style="background: none; border: none; cursor: pointer; color: rgba(255, 255, 255, 0.9);">
+                                Login ▼
+                            </button>
+                            <div id="loginDropdown" class="login-dropdown" style="display: none;">
+                                <a href="/auth/client-login">👤 Client Login</a>
+                                <a href="/auth/agent-login">🏢 Agent Login</a>
+                                <a href="/admin/login">👨‍💼 Admin Login</a>
+                            </div>
+                        </div>
+                    </li>
                     <li><a href="/auth/client-register" class="btn btn-primary btn-sm">Register</a></li>
                 <% } %>
             </ul>

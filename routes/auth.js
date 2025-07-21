@@ -4,30 +4,35 @@ const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
 const upload = require('../middleware/upload');
 
-// Login page
-router.get('/login', (req, res) => {
-  res.render('auth/login', { title: 'Login' });
+// Client login page
+router.get('/client-login', (req, res) => {
+  res.render('auth/client-login', { title: 'Client Login' });
 });
 
-// Handle login
-router.post('/login', [
+// Agent login page
+router.get('/agent-login', (req, res) => {
+  res.render('auth/agent-login', { title: 'Agent Login' });
+});
+
+// Handle client login
+router.post('/client-login', [
   body('email').isEmail().normalizeEmail(),
   body('password').notEmpty()
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     req.flash('error_msg', 'Please provide valid credentials');
-    return res.redirect('/auth/login');
+    return res.redirect('/auth/client-login');
   }
 
   try {
     const { email, password } = req.body;
-    // Exclude admin users from regular login
-    const user = await User.findOne({ email, role: { $ne: 'admin' } });
+    // Only allow client users
+    const user = await User.findOne({ email, role: 'client' });
 
     if (!user || !(await user.comparePassword(password))) {
       req.flash('error_msg', 'Invalid credentials');
-      return res.redirect('/auth/login');
+      return res.redirect('/auth/client-login');
     }
 
     req.session.user = {
@@ -37,21 +42,47 @@ router.post('/login', [
       role: user.role
     };
 
-    // Redirect based on role
-    switch (user.role) {
-      case 'client':
-        res.redirect('/client/dashboard');
-        break;
-      case 'agent':
-        res.redirect('/agent/dashboard');
-        break;
-      default:
-        res.redirect('/');
-    }
+    res.redirect('/client/dashboard');
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('Client login error:', error);
     req.flash('error_msg', 'Login failed');
-    res.redirect('/auth/login');
+    res.redirect('/auth/client-login');
+  }
+});
+
+// Handle agent login
+router.post('/agent-login', [
+  body('email').isEmail().normalizeEmail(),
+  body('password').notEmpty()
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    req.flash('error_msg', 'Please provide valid credentials');
+    return res.redirect('/auth/agent-login');
+  }
+
+  try {
+    const { email, password } = req.body;
+    // Only allow agent users
+    const user = await User.findOne({ email, role: 'agent' });
+
+    if (!user || !(await user.comparePassword(password))) {
+      req.flash('error_msg', 'Invalid credentials');
+      return res.redirect('/auth/agent-login');
+    }
+
+    req.session.user = {
+      _id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role
+    };
+
+    res.redirect('/agent/dashboard');
+  } catch (error) {
+    console.error('Agent login error:', error);
+    req.flash('error_msg', 'Login failed');
+    res.redirect('/auth/agent-login');
   }
 });
 

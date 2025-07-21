@@ -2,18 +2,23 @@
 
 <div class="container" style="padding: 2rem 0;">
     <div style="margin-bottom: 2rem;">
-        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; color: #667eea;">🏢 Manage Agents</h1>
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; color: #4f46e5;">🏢 Manage Agents</h1>
         <p style="color: rgba(255, 255, 255, 0.8);">View and manage all registered agents</p>
     </div>
 
     <div class="card">
-        <div style="padding: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
-            <h2 style="font-size: 1.5rem; color: #667eea; margin: 0;">All Agents</h2>
+        <div style="padding: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+            <h2 style="font-size: 1.5rem; color: #4f46e5; margin: 0;">All Agents</h2>
         </div>
         
         <% if (agents && agents.length > 0) { %>
+            <!-- Search Filter -->
+            <div class="search-filter-container">
+                <input type="text" id="agentSearch" placeholder="🔍 Search agents by name, email, or phone..." class="search-input" onkeyup="filterAgents()">
+            </div>
+
             <div class="table-container">
-                <table class="table">
+                <table class="table" id="agentsTable">
                     <thead>
                         <tr>
                             <th>Agent</th>
@@ -25,9 +30,9 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <% agents.forEach(agent => { %>
-                            <tr>
+                    <tbody id="agentsTableBody">
+                        <% agents.forEach((agent, index) => { %>
+                            <tr class="agent-row" style="<%= index >= 5 ? 'display: none;' : '' %>">
                                 <td>
                                     <div style="display: flex; align-items: center;">
                                         <% if (agent.profilePicture) { %>
@@ -44,7 +49,7 @@
                                     </div>
                                 </td>
                                 <td style="color: rgba(255, 255, 255, 0.8);"><%= agent.phone %></td>
-                                <td style="color: #667eea; font-weight: 600;"><%= agent.commission %>%</td>
+                                <td style="color: #4f46e5; font-weight: 600;"><%= agent.commission %>%</td>
                                 <td>
                                     <% if (agent.rating > 0) { %>
                                         <div style="display: flex; align-items: center;">
@@ -73,8 +78,17 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pagination -->
+            <% if (agents.length > 5) { %>
+                <div class="pagination-container">
+                    <button class="pagination-btn" onclick="previousPage()" id="prevBtn">← Previous</button>
+                    <span class="pagination-info" id="pageInfo">Showing 1-5 of <%= agents.length %></span>
+                    <button class="pagination-btn" onclick="nextPage()" id="nextBtn">Next →</button>
+                </div>
+            <% } %>
         <% } else { %>
-            <div style="padding: 3rem; text-center;">
+            <div style="padding: 3rem; text-align: center;">
                 <div style="color: rgba(255, 255, 255, 0.7);">
                     <div style="font-size: 4rem; margin-bottom: 1rem;">🏢</div>
                     <p style="font-size: 1.25rem; margin-bottom: 1rem;">No agents found</p>
@@ -88,5 +102,89 @@
         <a href="/admin/dashboard" class="btn btn-primary btn-lg">← Back to Dashboard</a>
     </div>
 </div>
+
+<script>
+let currentPage = 1;
+const rowsPerPage = 5;
+let filteredRows = [];
+
+function filterAgents() {
+    const searchTerm = document.getElementById('agentSearch').value.toLowerCase();
+    const rows = document.querySelectorAll('.agent-row');
+    filteredRows = [];
+    
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        if (text.includes(searchTerm)) {
+            filteredRows.push(row);
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+    
+    // Reset pagination
+    currentPage = 1;
+    paginateRows();
+}
+
+function paginateRows() {
+    const rows = filteredRows.length > 0 ? filteredRows : document.querySelectorAll('.agent-row');
+    const totalRows = rows.length;
+    const totalPages = Math.ceil(totalRows / rowsPerPage);
+    
+    // Hide all rows first
+    rows.forEach(row => row.style.display = 'none');
+    
+    // Show current page rows
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = Math.min(startIndex + rowsPerPage, totalRows);
+    
+    for (let i = startIndex; i < endIndex; i++) {
+        if (rows[i]) {
+            rows[i].style.display = '';
+        }
+    }
+    
+    // Update pagination info
+    const pageInfo = document.getElementById('pageInfo');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    if (pageInfo) {
+        pageInfo.textContent = `Showing ${startIndex + 1}-${endIndex} of ${totalRows}`;
+    }
+    
+    if (prevBtn) {
+        prevBtn.disabled = currentPage === 1;
+    }
+    
+    if (nextBtn) {
+        nextBtn.disabled = currentPage === totalPages;
+    }
+}
+
+function previousPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        paginateRows();
+    }
+}
+
+function nextPage() {
+    const rows = filteredRows.length > 0 ? filteredRows : document.querySelectorAll('.agent-row');
+    const totalPages = Math.ceil(rows.length / rowsPerPage);
+    
+    if (currentPage < totalPages) {
+        currentPage++;
+        paginateRows();
+    }
+}
+
+// Initialize pagination on page load
+document.addEventListener('DOMContentLoaded', function() {
+    paginateRows();
+});
+</script>
 
 <%- include('../partials/footer') %>

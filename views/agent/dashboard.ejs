@@ -2,7 +2,7 @@
 
 <div class="container" style="padding: 2rem 0;">
     <div style="margin-bottom: 2rem;">
-        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; color: #667eea;">🏢 Welcome back, <%= agent.fullName %>!</h1>
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; color: #4f46e5;">🏢 Welcome back, <%= agent.fullName %>!</h1>
         <p style="color: rgba(255, 255, 255, 0.8);">Manage your properties and track your performance</p>
         
         <% if (agent.isBlocked) { %>
@@ -41,7 +41,7 @@
 
     <!-- Quick Actions -->
     <div class="card mb-4">
-        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #667eea;">⚡ Quick Actions</h2>
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #4f46e5;">⚡ Quick Actions</h2>
         <div class="grid grid-4">
             <% if (!agent.isBlocked) { %>
                 <a href="/agent/upload" class="btn btn-primary">📤 Upload New Property</a>
@@ -55,15 +55,20 @@
     <!-- Properties Section -->
     <div class="card mb-4">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-            <h2 style="font-size: 1.5rem; color: #667eea; margin: 0;">🏠 Your Properties</h2>
+            <h2 style="font-size: 1.5rem; color: #4f46e5; margin: 0;">🏠 Your Properties</h2>
             <% if (!agent.isBlocked) { %>
                 <a href="/agent/upload" class="btn btn-primary btn-sm">+ Add Property</a>
             <% } %>
         </div>
         
         <% if (properties && properties.length > 0) { %>
+            <!-- Search Filter -->
+            <div class="search-filter-container">
+                <input type="text" id="propertySearch" placeholder="🔍 Search properties by title, location, or type..." class="search-input" onkeyup="filterProperties()">
+            </div>
+
             <div class="table-container">
-                <table class="table">
+                <table class="table" id="propertiesTable">
                     <thead>
                         <tr>
                             <th>Property</th>
@@ -75,9 +80,9 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <% properties.forEach(property => { %>
-                            <tr>
+                    <tbody id="propertiesTableBody">
+                        <% properties.forEach((property, index) => { %>
+                            <tr class="property-row" style="<%= index >= 5 ? 'display: none;' : '' %>">
                                 <td>
                                     <div style="display: flex; align-items: center;">
                                         <img src="/uploads/properties/<%= property.images[0] %>" alt="<%= property.title %>" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover; margin-right: 1rem;">
@@ -95,7 +100,7 @@
                                         <%= property.status.charAt(0).toUpperCase() + property.status.slice(1) %>
                                     </span>
                                 </td>
-                                <td style="color: #667eea; font-weight: 600;"><%= property.views %></td>
+                                <td style="color: #4f46e5; font-weight: 600;"><%= property.views %></td>
                                 <td>
                                     <div style="display: flex; gap: 0.5rem;">
                                         <a href="/property/<%= property._id %>" class="btn btn-sm btn-primary">View</a>
@@ -110,6 +115,15 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pagination -->
+            <% if (properties.length > 5) { %>
+                <div class="pagination-container">
+                    <button class="pagination-btn" onclick="previousPage()" id="prevBtn">← Previous</button>
+                    <span class="pagination-info" id="pageInfo">Showing 1-5 of <%= properties.length %></span>
+                    <button class="pagination-btn" onclick="nextPage()" id="nextBtn">Next →</button>
+                </div>
+            <% } %>
         <% } else { %>
             <div style="text-align: center; padding: 3rem 0;">
                 <div style="color: rgba(255, 255, 255, 0.7);">
@@ -125,7 +139,7 @@
 
     <!-- Deals Section -->
     <div class="card mb-4">
-        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #667eea;">💼 Recent Deals</h2>
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #4f46e5;">💼 Recent Deals</h2>
         
         <% if (deals && deals.length > 0) { %>
             <div class="table-container">
@@ -140,12 +154,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% deals.forEach(deal => { %>
+                        <% deals.slice(0, 5).forEach(deal => { %>
                             <tr>
                                 <td style="color: rgba(255, 255, 255, 0.9);"><%= deal.property.title %></td>
                                 <td style="color: rgba(255, 255, 255, 0.9);"><%= deal.client.fullName %></td>
                                 <td style="color: #51cf66; font-weight: 600;">₦<%= deal.dealValue.toLocaleString() %></td>
-                                <td style="color: #667eea; font-weight: 600;">₦<%= deal.commission.toLocaleString() %></td>
+                                <td style="color: #4f46e5; font-weight: 600;">₦<%= deal.commission.toLocaleString() %></td>
                                 <td>
                                     <span style="padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; <%= deal.status === 'closed' ? 'background: rgba(81, 207, 102, 0.2); color: #51cf66;' : deal.status === 'pending' ? 'background: rgba(255, 212, 59, 0.2); color: #ffd43b;' : 'background: rgba(255, 107, 107, 0.2); color: #ff6b6b;' %>">
                                         <%= deal.status.charAt(0).toUpperCase() + deal.status.slice(1) %>
@@ -169,12 +183,12 @@
 
     <!-- Reviews Section -->
     <div class="card">
-        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #667eea;">⭐ Recent Reviews</h2>
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #4f46e5;">⭐ Recent Reviews</h2>
         
         <% if (ratings && ratings.length > 0) { %>
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                <% ratings.forEach(rating => { %>
-                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #667eea;">
+                <% ratings.slice(0, 3).forEach(rating => { %>
+                    <div style="background: rgba(30, 30, 30, 0.8); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #4f46e5; border: 1px solid rgba(255, 255, 255, 0.05);">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                             <div style="display: flex; align-items: center;">
                                 <span style="font-weight: 600; color: #ffffff; margin-right: 1rem;"><%= rating.client.fullName %></span>
@@ -202,5 +216,89 @@
         <% } %>
     </div>
 </div>
+
+<script>
+let currentPage = 1;
+const rowsPerPage = 5;
+let filteredRows = [];
+
+function filterProperties() {
+    const searchTerm = document.getElementById('propertySearch').value.toLowerCase();
+    const rows = document.querySelectorAll('.property-row');
+    filteredRows = [];
+    
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        if (text.includes(searchTerm)) {
+            filteredRows.push(row);
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+    
+    // Reset pagination
+    currentPage = 1;
+    paginateRows();
+}
+
+function paginateRows() {
+    const rows = filteredRows.length > 0 ? filteredRows : document.querySelectorAll('.property-row');
+    const totalRows = rows.length;
+    const totalPages = Math.ceil(totalRows / rowsPerPage);
+    
+    // Hide all rows first
+    rows.forEach(row => row.style.display = 'none');
+    
+    // Show current page rows
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = Math.min(startIndex + rowsPerPage, totalRows);
+    
+    for (let i = startIndex; i < endIndex; i++) {
+        if (rows[i]) {
+            rows[i].style.display = '';
+        }
+    }
+    
+    // Update pagination info
+    const pageInfo = document.getElementById('pageInfo');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    if (pageInfo) {
+        pageInfo.textContent = `Showing ${startIndex + 1}-${endIndex} of ${totalRows}`;
+    }
+    
+    if (prevBtn) {
+        prevBtn.disabled = currentPage === 1;
+    }
+    
+    if (nextBtn) {
+        nextBtn.disabled = currentPage === totalPages;
+    }
+}
+
+function previousPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        paginateRows();
+    }
+}
+
+function nextPage() {
+    const rows = filteredRows.length > 0 ? filteredRows : document.querySelectorAll('.property-row');
+    const totalPages = Math.ceil(rows.length / rowsPerPage);
+    
+    if (currentPage < totalPages) {
+        currentPage++;
+        paginateRows();
+    }
+}
+
+// Initialize pagination on page load
+document.addEventListener('DOMContentLoaded', function() {
+    paginateRows();
+});
+</script>
 
 <%- include('../partials/footer') %>

@@ -70,6 +70,23 @@
         function confirmLogout() {
             return confirm('Are you sure you want to logout?');
         }
+        
+        function toggleLoginDropdown() {
+            const dropdown = document.getElementById('loginDropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('loginDropdown');
+            const button = event.target.closest('button');
+            
+            if (!button || !button.onclick || button.onclick.toString().indexOf('toggleLoginDropdown') === -1) {
+                if (dropdown) {
+                    dropdown.style.display = 'none';
+                }
+            }
+        });
     </script>
     
     <!-- Mobile Menu Script -->
