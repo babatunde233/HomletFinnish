@@ -35,7 +35,7 @@
 
     <!-- Quick Actions -->
     <div class="card mb-4">
-        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #4f46e5;">Quick Actions</h2>
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #4f46e5;">⚡ Quick Actions</h2>
         <div class="grid grid-4">
             <a href="/client/payments" class="btn btn-primary">💳 Payment History</a>
             <a href="/houses" class="btn btn-success">🔍 Browse All Properties</a>
@@ -47,37 +47,39 @@
     <!-- Filters -->
     <div class="card mb-4">
         <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #4f46e5;">🔍 Filter Properties</h2>
-        <form method="GET" action="/client/dashboard" class="grid grid-5" style="gap: 1.5rem;">
-            <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label">State</label>
-                <input type="text" name="state" value="<%= typeof filters !== 'undefined' && filters.state ? filters.state : '' %>" placeholder="Enter state" class="form-input">
+        <form method="GET" action="/client/dashboard" class="filter-form">
+            <div class="filter-grid">
+                <div class="form-group">
+                    <label class="form-label">State</label>
+                    <input type="text" name="state" value="<%= typeof filters !== 'undefined' && filters.state ? filters.state : '' %>" placeholder="Enter state" class="form-input">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Area</label>
+                    <input type="text" name="area" value="<%= typeof filters !== 'undefined' && filters.area ? filters.area : '' %>" placeholder="Enter area" class="form-input">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Min Price (₦)</label>
+                    <input type="number" name="minPrice" value="<%= typeof filters !== 'undefined' && filters.minPrice ? filters.minPrice : '' %>" placeholder="Min price" class="form-input">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Max Price (₦)</label>
+                    <input type="number" name="maxPrice" value="<%= typeof filters !== 'undefined' && filters.maxPrice ? filters.maxPrice : '' %>" placeholder="Max price" class="form-input">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Type</label>
+                    <select name="type" class="form-input">
+                        <option value="">All Types</option>
+                        <option value="rent" <%= typeof filters !== 'undefined' && filters.type === 'rent' ? 'selected' : '' %>>For Rent</option>
+                        <option value="buy" <%= typeof filters !== 'undefined' && filters.type === 'buy' ? 'selected' : '' %>>For Sale</option>
+                    </select>
+                </div>
             </div>
             
-            <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label">Area</label>
-                <input type="text" name="area" value="<%= typeof filters !== 'undefined' && filters.area ? filters.area : '' %>" placeholder="Enter area" class="form-input">
-            </div>
-            
-            <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label">Min Price (₦)</label>
-                <input type="number" name="minPrice" value="<%= typeof filters !== 'undefined' && filters.minPrice ? filters.minPrice : '' %>" placeholder="Min price" class="form-input">
-            </div>
-            
-            <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label">Max Price (₦)</label>
-                <input type="number" name="maxPrice" value="<%= typeof filters !== 'undefined' && filters.maxPrice ? filters.maxPrice : '' %>" placeholder="Max price" class="form-input">
-            </div>
-            
-            <div class="form-group" style="margin-bottom: 0;">
-                <label class="form-label">Type</label>
-                <select name="type" class="form-input">
-                    <option value="">All Types</option>
-                    <option value="rent" <%= typeof filters !== 'undefined' && filters.type === 'rent' ? 'selected' : '' %>>For Rent</option>
-                    <option value="buy" <%= typeof filters !== 'undefined' && filters.type === 'buy' ? 'selected' : '' %>>For Sale</option>
-                </select>
-            </div>
-            
-            <div style="display: flex; gap: 1rem; align-items: end; grid-column: 1 / -1;">
+            <div class="filter-actions">
                 <button type="submit" class="btn btn-primary">Apply Filters</button>
                 <a href="/client/dashboard" class="btn btn-secondary">Clear Filters</a>
             </div>
@@ -168,19 +170,51 @@
                 <% }); %>
             </div>
         </div>
+    </div>
     <% } %>
 </div>
 
+<!-- Payment Modal -->
+<div id="paymentModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>💳 Unlock Agent Contact</h3>
+            <span class="modal-close" onclick="closePaymentModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="payment-info">
+                <div class="payment-icon">🔓</div>
+                <h4>Unlock Agent Contact Information</h4>
+                <p>Pay ₦2,000 to get direct access to the agent's phone number</p>
+                <div class="payment-amount">₦2,000</div>
+            </div>
+            <div class="payment-actions">
+                <button id="payNowBtn" class="btn btn-success btn-lg">Pay Now with Paystack</button>
+                <button onclick="closePaymentModal()" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+let currentPropertyId = null;
+
 function unlockAgent(propertyId) {
-    if (!confirm('Are you sure you want to unlock this agent\'s contact for ₦2,000?')) {
-        return;
-    }
+    currentPropertyId = propertyId;
+    document.getElementById('paymentModal').style.display = 'flex';
+}
+
+function closePaymentModal() {
+    document.getElementById('paymentModal').style.display = 'none';
+    currentPropertyId = null;
+}
+
+document.getElementById('payNowBtn').addEventListener('click', function() {
+    if (!currentPropertyId) return;
     
-    // Show loading state
-    const button = event.target;
+    const button = this;
     const originalText = button.innerHTML;
-    button.innerHTML = '<span style="display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top: 2px solid #fff; animation: spin 1s linear infinite;"></span> Processing...';
+    button.innerHTML = '<div class="loading-spinner"></div> Processing...';
     button.disabled = true;
     
     fetch('/payment/initialize', {
@@ -188,50 +222,72 @@ function unlockAgent(propertyId) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ propertyId: propertyId })
+        body: JSON.stringify({ propertyId: currentPropertyId })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Initialize Paystack payment
-            let handler = PaystackPop.setup({
-                key: 'pk_test_your_public_key_here', // Replace with your public key
-                email: '<%= user.email %>',
-                amount: 200000, // ₦2,000 in kobo
-                currency: 'NGN',
-                ref: data.data.reference,
-                callback: function(response) {
-                    // Payment successful
-                    alert('🎉 Payment successful! Agent contact has been unlocked.');
+            // For demo purposes, simulate successful payment
+            setTimeout(() => {
+                closePaymentModal();
+                showSuccessModal('🎉 Payment successful! Agent contact has been unlocked.');
+                setTimeout(() => {
                     window.location.reload();
-                },
-                onClose: function() {
-                    // Payment cancelled
-                    button.innerHTML = originalText;
-                    button.disabled = false;
-                }
-            });
-            handler.openIframe();
+                }, 2000);
+            }, 2000);
         } else {
-            alert('❌ Error: ' + (data.error || 'Payment initialization failed'));
+            showErrorModal('❌ Error: ' + (data.error || 'Payment initialization failed'));
             button.innerHTML = originalText;
             button.disabled = false;
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('❌ Payment initialization failed. Please try again.');
+        showErrorModal('❌ Payment initialization failed. Please try again.');
         button.innerHTML = originalText;
         button.disabled = false;
     });
+});
+
+function showSuccessModal(message) {
+    const modal = document.createElement('div');
+    modal.className = 'notification-modal success';
+    modal.innerHTML = `
+        <div class="notification-content">
+            <div class="notification-icon">✅</div>
+            <div class="notification-message">${message}</div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    
+    setTimeout(() => {
+        modal.remove();
+    }, 3000);
+}
+
+function showErrorModal(message) {
+    const modal = document.createElement('div');
+    modal.className = 'notification-modal error';
+    modal.innerHTML = `
+        <div class="notification-content">
+            <div class="notification-icon">❌</div>
+            <div class="notification-message">${message}</div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    
+    setTimeout(() => {
+        modal.remove();
+    }, 3000);
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('paymentModal');
+    if (event.target === modal) {
+        closePaymentModal();
+    }
 }
 </script>
-
-<style>
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-</style>
 
 <%- include('../partials/footer') %>

@@ -1,100 +1,145 @@
 <%- include('../partials/header') %>
 
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Upload New Property</h1>
-        <p class="text-gray-600 mt-2">Add a new property to your listings</p>
+<div class="container" style="padding: 2rem 0;">
+    <div style="margin-bottom: 2rem;">
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; color: #4f46e5;">📤 Upload New Property</h1>
+        <p style="color: rgba(255, 255, 255, 0.8);">Add a new property to your listings</p>
     </div>
 
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <form action="/agent/upload" method="POST" enctype="multipart/form-data" class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Property Title</label>
-                    <input type="text" id="title" name="title" required
-                           class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                           placeholder="e.g., Modern 3 Bedroom Apartment">
+    <div class="form-container" style="max-width: 800px;">
+        <form action="/agent/upload" method="POST" enctype="multipart/form-data" class="upload-form">
+            <div class="form-section">
+                <h3 class="section-title">🏠 Property Information</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="title" class="form-label">Property Title</label>
+                        <input type="text" id="title" name="title" required class="form-input" placeholder="e.g., Modern 3 Bedroom Apartment">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="price" class="form-label">Price (₦)</label>
+                        <input type="number" id="price" name="price" required class="form-input" placeholder="e.g., 500000">
+                    </div>
                 </div>
 
-                <div>
-                    <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Price (₦)</label>
-                    <input type="number" id="price" name="price" required
-                           class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                           placeholder="e.g., 500000">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="state" class="form-label">State</label>
+                        <input type="text" id="state" name="state" required class="form-input" placeholder="e.g., Lagos">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="area" class="form-label">Area</label>
+                        <input type="text" id="area" name="area" required class="form-input" placeholder="e.g., Victoria Island">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="propertyType" class="form-label">Property Type</label>
+                    <select id="propertyType" name="propertyType" required class="form-input">
+                        <option value="">Select Type</option>
+                        <option value="rent">For Rent</option>
+                        <option value="buy">For Sale</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea id="description" name="description" rows="4" required class="form-input" placeholder="Describe the property features, amenities, and location details..."></textarea>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="state" class="block text-sm font-medium text-gray-700 mb-2">State</label>
-                    <input type="text" id="state" name="state" required
-                           class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                           placeholder="e.g., Lagos">
+            <div class="form-section">
+                <h3 class="section-title">📸 Media Upload</h3>
+                
+                <div class="upload-section">
+                    <div class="form-group">
+                        <label for="images" class="form-label">Property Images</label>
+                        <div class="file-upload-area" onclick="document.getElementById('images').click()">
+                            <div class="upload-icon">📸</div>
+                            <div class="upload-text">
+                                <strong>Click to upload images</strong>
+                                <p>Upload exactly 5 images (JPG, PNG, GIF)</p>
+                            </div>
+                            <input type="file" id="images" name="images" multiple accept="image/*" required style="display: none;">
+                        </div>
+                        <div id="image-preview" class="image-preview"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="video" class="form-label">Property Video (Optional)</label>
+                        <div class="file-upload-area" onclick="document.getElementById('video').click()">
+                            <div class="upload-icon">🎥</div>
+                            <div class="upload-text">
+                                <strong>Click to upload video</strong>
+                                <p>Upload a video showcasing the property (MP4, AVI, MOV)</p>
+                            </div>
+                            <input type="file" id="video" name="video" accept="video/*" style="display: none;">
+                        </div>
+                        <div id="video-preview" class="video-preview"></div>
+                    </div>
                 </div>
-
-                <div>
-                    <label for="area" class="block text-sm font-medium text-gray-700 mb-2">Area</label>
-                    <input type="text" id="area" name="area" required
-                           class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                           placeholder="e.g., Victoria Island">
-                </div>
             </div>
 
-            <div>
-                <label for="propertyType" class="block text-sm font-medium text-gray-700 mb-2">Property Type</label>
-                <select id="propertyType" name="propertyType" required
-                        class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">Select Type</option>
-                    <option value="rent">For Rent</option>
-                    <option value="buy">For Sale</option>
-                </select>
-            </div>
-
-            <div>
-                <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                <textarea id="description" name="description" rows="4" required
-                          class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                          placeholder="Describe the property features, amenities, and location details..."></textarea>
-            </div>
-
-            <div>
-                <label for="images" class="block text-sm font-medium text-gray-700 mb-2">Property Images</label>
-                <input type="file" id="images" name="images" multiple accept="image/*" required
-                       class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                <p class="text-sm text-gray-500 mt-1">Upload exactly 5 images (JPG, PNG, GIF)</p>
-            </div>
-
-            <div>
-                <label for="video" class="block text-sm font-medium text-gray-700 mb-2">Property Video (Optional)</label>
-                <input type="file" id="video" name="video" accept="video/*"
-                       class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                <p class="text-sm text-gray-500 mt-1">Upload a video showcasing the property (MP4, AVI, MOV)</p>
-            </div>
-
-            <div class="flex justify-between">
-                <a href="/agent/dashboard" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-md hover:bg-gray-400 transition duration-300">
-                    Cancel
-                </a>
-                <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition duration-300">
-                    Upload Property
-                </button>
+            <div class="form-actions">
+                <a href="/agent/dashboard" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary btn-lg">📤 Upload Property</button>
             </div>
         </form>
     </div>
 </div>
 
 <script>
-// Image count validation
+// Image upload handling
 document.getElementById('images').addEventListener('change', function(e) {
     const files = e.target.files;
+    const preview = document.getElementById('image-preview');
+    
     if (files.length !== 5) {
         alert('Please select exactly 5 images');
         e.target.value = '';
+        preview.innerHTML = '';
+        return;
+    }
+    
+    preview.innerHTML = '';
+    Array.from(files).forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.createElement('div');
+            img.className = 'preview-item';
+            img.innerHTML = `
+                <img src="${e.target.result}" alt="Preview ${index + 1}">
+                <div class="preview-label">Image ${index + 1}</div>
+            `;
+            preview.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    });
+});
+
+// Video upload handling
+document.getElementById('video').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('video-preview');
+    
+    if (file) {
+        const video = document.createElement('div');
+        video.className = 'preview-item';
+        video.innerHTML = `
+            <video controls>
+                <source src="${URL.createObjectURL(file)}" type="${file.type}">
+            </video>
+            <div class="preview-label">${file.name}</div>
+        `;
+        preview.innerHTML = '';
+        preview.appendChild(video);
     }
 });
 
 // Form validation
-document.querySelector('form').addEventListener('submit', function(e) {
+document.querySelector('.upload-form').addEventListener('submit', function(e) {
     const images = document.getElementById('images').files;
     if (images.length !== 5) {
         e.preventDefault();
