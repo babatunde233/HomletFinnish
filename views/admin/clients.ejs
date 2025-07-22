@@ -12,9 +12,11 @@
         </div>
         
         <% if (clients && clients.length > 0) { %>
-            <!-- Search Filter -->
-            <div class="search-filter-container">
-                <input type="text" id="clientSearch" placeholder="🔍 Search clients by name, email, or phone..." class="search-input" onkeyup="filterClients()">
+            <!-- Search Filter - Fixed Width -->
+            <div style="padding: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                <div style="max-width: 400px;">
+                    <input type="text" id="clientSearch" placeholder="🔍 Search clients..." class="form-input" onkeyup="filterClients()">
+                </div>
             </div>
 
             <div class="table-container">
