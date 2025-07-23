@@ -2,7 +2,7 @@
 
 <div class="container" style="padding: 2rem 0;">
     <div style="margin-bottom: 2rem;">
-        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; color: #4f46e5;">👋 Welcome back, <%= user.fullName %>!</h1>
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; color: #667eea;">👋 Welcome back, <%= user.fullName %>!</h1>
         <p style="color: rgba(255, 255, 255, 0.8);">Browse properties and connect with verified agents</p>
     </div>
 
@@ -35,7 +35,7 @@
 
     <!-- Quick Actions -->
     <div class="card mb-4">
-        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #4f46e5;">⚡ Quick Actions</h2>
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #667eea;">⚡ Quick Actions</h2>
         <div class="grid grid-4">
             <a href="/client/payments" class="btn btn-primary">💳 Payment History</a>
             <a href="/houses" class="btn btn-success">🔍 Browse All Properties</a>
@@ -44,34 +44,77 @@
         </div>
     </div>
 
-    <!-- Filters -->
+    <!-- Smart Search Filters -->
     <div class="card mb-4">
-        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #4f46e5;">🔍 Filter Properties</h2>
-        <form method="GET" action="/client/dashboard" class="filter-form">
-            <div class="filter-grid">
+        <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #667eea;">🔍 Smart Property Search</h2>
+        <form method="GET" action="/client/dashboard" class="smart-search-form">
+            <div class="search-grid">
                 <div class="form-group">
                     <label class="form-label">State</label>
-                    <input type="text" name="state" value="<%= typeof filters !== 'undefined' && filters.state ? filters.state : '' %>" placeholder="Enter state" class="form-input">
+                    <input type="text" name="state" 
+                           value="<%= typeof filters !== 'undefined' && filters.state ? filters.state : '' %>" 
+                           placeholder="Lagos, Abuja, Rivers..." 
+                           class="smart-search-input"
+                           list="states-list">
+                    <datalist id="states-list">
+                        <option value="Lagos">
+                        <option value="Abuja">
+                        <option value="Rivers">
+                        <option value="Ogun">
+                        <option value="Kano">
+                        <option value="Kaduna">
+                        <option value="Oyo">
+                        <option value="Delta">
+                        <option value="Edo">
+                        <option value="Anambra">
+                    </datalist>
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label">Area</label>
-                    <input type="text" name="area" value="<%= typeof filters !== 'undefined' && filters.area ? filters.area : '' %>" placeholder="Enter area" class="form-input">
+                    <input type="text" name="area" 
+                           value="<%= typeof filters !== 'undefined' && filters.area ? filters.area : '' %>" 
+                           placeholder="Victoria Island, Lekki, Ikeja..." 
+                           class="smart-search-input"
+                           list="areas-list">
+                    <datalist id="areas-list">
+                        <option value="Victoria Island">
+                        <option value="Lekki">
+                        <option value="Ikeja">
+                        <option value="Ikoyi">
+                        <option value="Surulere">
+                        <option value="Yaba">
+                        <option value="Gbagada">
+                        <option value="Ajah">
+                        <option value="Magodo">
+                        <option value="Alimosho">
+                        <option value="Igando">
+                        <option value="Egbeda">
+                        <option value="Isolo">
+                        <option value="Oshodi">
+                        <option value="Maryland">
+                    </datalist>
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label">Min Price (₦)</label>
-                    <input type="number" name="minPrice" value="<%= typeof filters !== 'undefined' && filters.minPrice ? filters.minPrice : '' %>" placeholder="Min price" class="form-input">
+                    <input type="number" name="minPrice" 
+                           value="<%= typeof filters !== 'undefined' && filters.minPrice ? filters.minPrice : '' %>" 
+                           placeholder="100,000" 
+                           class="smart-search-input">
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label">Max Price (₦)</label>
-                    <input type="number" name="maxPrice" value="<%= typeof filters !== 'undefined' && filters.maxPrice ? filters.maxPrice : '' %>" placeholder="Max price" class="form-input">
+                    <input type="number" name="maxPrice" 
+                           value="<%= typeof filters !== 'undefined' && filters.maxPrice ? filters.maxPrice : '' %>" 
+                           placeholder="5,000,000" 
+                           class="smart-search-input">
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label">Type</label>
-                    <select name="type" class="form-input">
+                    <label class="form-label">Property Type</label>
+                    <select name="type" class="smart-search-input">
                         <option value="">All Types</option>
                         <option value="rent" <%= typeof filters !== 'undefined' && filters.type === 'rent' ? 'selected' : '' %>>For Rent</option>
                         <option value="buy" <%= typeof filters !== 'undefined' && filters.type === 'buy' ? 'selected' : '' %>>For Sale</option>
@@ -79,16 +122,16 @@
                 </div>
             </div>
             
-            <div class="filter-actions">
-                <button type="submit" class="btn btn-primary">Apply Filters</button>
-                <a href="/client/dashboard" class="btn btn-secondary">Clear Filters</a>
+            <div class="search-actions">
+                <button type="submit" class="btn btn-primary">🔍 Search Properties</button>
+                <a href="/client/dashboard" class="btn btn-secondary">🔄 Clear Filters</a>
             </div>
         </form>
     </div>
 
     <!-- Properties Grid -->
     <div style="margin-bottom: 2rem;">
-        <h2 style="font-size: 1.8rem; margin-bottom: 1.5rem; color: #4f46e5;">🏠 Available Properties</h2>
+        <h2 style="font-size: 1.8rem; margin-bottom: 1.5rem; color: #667eea;">🏠 Available Properties</h2>
         
         <div class="grid grid-3">
             <% if (typeof properties !== 'undefined' && properties && properties.length > 0) { %>
@@ -133,7 +176,7 @@
                                         <a href="/client/rate/<%= property.agent._id %>" class="btn btn-warning btn-sm" style="margin-top: 0.5rem;">Rate Agent</a>
                                     </div>
                                 <% } else { %>
-                                    <button onclick="unlockAgent('<%= property._id %>')" class="btn btn-success" style="white-space: nowrap;">
+                                    <button onclick="unlockAgent('<%= property._id %>')" class="btn btn-success unlock-btn" style="white-space: nowrap;">
                                         🔓 Unlock Agent<br><small>(₦2,000)</small>
                                     </button>
                                 <% } %>
@@ -146,7 +189,7 @@
                     <div style="color: rgba(255, 255, 255, 0.7);">
                         <div style="font-size: 4rem; margin-bottom: 1rem;">🏠</div>
                         <p style="font-size: 1.5rem; margin-bottom: 1rem;">No properties found matching your criteria</p>
-                        <p>Try adjusting your filters or <a href="/client/dashboard" style="color: #4f46e5;">browse all properties</a></p>
+                        <p>Try adjusting your search filters or <a href="/client/dashboard" style="color: #667eea;">browse all properties</a></p>
                     </div>
                 </div>
             <% } %>
@@ -156,7 +199,7 @@
     <!-- Unlocked Agents Section -->
     <% if (client.unlockedAgents && client.unlockedAgents.length > 0) { %>
         <div class="card">
-            <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #4f46e5;">👥 Your Unlocked Agents</h2>
+            <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #667eea;">👥 Your Unlocked Agents</h2>
             <div class="grid grid-3">
                 <% client.unlockedAgents.forEach(agent => { %>
                     <div style="background: rgba(30, 30, 30, 0.8); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.05);">
@@ -170,18 +213,17 @@
                 <% }); %>
             </div>
         </div>
-    </div>
     <% } %>
 </div>
 
-<!-- Payment Modal -->
-<div id="paymentModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
+<!-- Paystack Payment Modal -->
+<div id="paymentModal" class="payment-modal" style="display: none;">
+    <div class="payment-modal-content">
+        <div class="payment-modal-header">
             <h3>💳 Unlock Agent Contact</h3>
-            <span class="modal-close" onclick="closePaymentModal()">&times;</span>
+            <span class="payment-modal-close" onclick="closePaymentModal()">&times;</span>
         </div>
-        <div class="modal-body">
+        <div class="payment-modal-body">
             <div class="payment-info">
                 <div class="payment-icon">🔓</div>
                 <h4>Unlock Agent Contact Information</h4>
@@ -189,13 +231,14 @@
                 <div class="payment-amount">₦2,000</div>
             </div>
             <div class="payment-actions">
-                <button id="payNowBtn" class="btn btn-success btn-lg">Pay Now with Paystack</button>
+                <button id="payNowBtn" class="btn btn-success btn-lg">💳 Pay with Paystack</button>
                 <button onclick="closePaymentModal()" class="btn btn-secondary">Cancel</button>
             </div>
         </div>
     </div>
 </div>
 
+<script src="https://js.paystack.co/v1/inline.js"></script>
 <script>
 let currentPropertyId = null;
 
@@ -217,77 +260,106 @@ document.getElementById('payNowBtn').addEventListener('click', function() {
     button.innerHTML = '<div class="loading-spinner"></div> Processing...';
     button.disabled = true;
     
-    fetch('/payment/initialize', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
+    // Initialize Paystack payment
+    const handler = PaystackPop.setup({
+        key: 'pk_test_your_public_key_here', // Replace with your public key
+        email: '<%= user.email %>',
+        amount: 200000, // ₦2,000 in kobo
+        currency: 'NGN',
+        ref: 'unlock_' + Date.now() + '_' + currentPropertyId,
+        callback: function(response) {
+            // Payment successful, verify on server
+            fetch('/payment/verify', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    reference: response.reference,
+                    propertyId: currentPropertyId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closePaymentModal();
+                    showSuccessNotification('🎉 Payment successful! Agent contact has been unlocked.');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    showErrorNotification('❌ Payment verification failed. Please contact support.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showErrorNotification('❌ Payment verification failed. Please try again.');
+            })
+            .finally(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            });
         },
-        body: JSON.stringify({ propertyId: currentPropertyId })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // For demo purposes, simulate successful payment
-            setTimeout(() => {
-                closePaymentModal();
-                showSuccessModal('🎉 Payment successful! Agent contact has been unlocked.');
-                setTimeout(() => {
-                    window.location.reload();
-                }, 2000);
-            }, 2000);
-        } else {
-            showErrorModal('❌ Error: ' + (data.error || 'Payment initialization failed'));
+        onClose: function() {
             button.innerHTML = originalText;
             button.disabled = false;
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showErrorModal('❌ Payment initialization failed. Please try again.');
-        button.innerHTML = originalText;
-        button.disabled = false;
     });
+    
+    handler.openIframe();
 });
 
-function showSuccessModal(message) {
-    const modal = document.createElement('div');
-    modal.className = 'notification-modal success';
-    modal.innerHTML = `
+function showSuccessNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification success';
+    notification.innerHTML = `
         <div class="notification-content">
             <div class="notification-icon">✅</div>
             <div class="notification-message">${message}</div>
         </div>
     `;
-    document.body.appendChild(modal);
+    document.body.appendChild(notification);
     
     setTimeout(() => {
-        modal.remove();
-    }, 3000);
+        notification.remove();
+    }, 5000);
 }
 
-function showErrorModal(message) {
-    const modal = document.createElement('div');
-    modal.className = 'notification-modal error';
-    modal.innerHTML = `
+function showErrorNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification error';
+    notification.innerHTML = `
         <div class="notification-content">
             <div class="notification-icon">❌</div>
             <div class="notification-message">${message}</div>
         </div>
     `;
-    document.body.appendChild(modal);
+    document.body.appendChild(notification);
     
     setTimeout(() => {
-        modal.remove();
-    }, 3000);
+        notification.remove();
+    }, 5000);
 }
 
-// Close modal when clicking outside
-window.onclick = function(event) {
-    const modal = document.getElementById('paymentModal');
-    if (event.target === modal) {
-        closePaymentModal();
-    }
-}
+// Smart search with fuzzy matching
+document.querySelectorAll('.smart-search-input').forEach(input => {
+    input.addEventListener('input', function() {
+        const value = this.value.toLowerCase();
+        const datalist = document.querySelector(`#${this.getAttribute('list')}`);
+        
+        if (datalist) {
+            const options = datalist.querySelectorAll('option');
+            options.forEach(option => {
+                const optionValue = option.value.toLowerCase();
+                if (optionValue.includes(value) || value.includes(optionValue.substring(0, 3))) {
+                    option.style.display = 'block';
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+        }
+    });
+});
 </script>
 
 <%- include('../partials/footer') %>

@@ -2,13 +2,13 @@
 
 <div class="container" style="padding: 2rem 0;">
     <div style="margin-bottom: 2rem;">
-        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; color: #4f46e5;">💳 Payment History</h1>
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; color: #667eea;">💳 Payment History</h1>
         <p style="color: rgba(255, 255, 255, 0.8);">View all your payment transactions</p>
     </div>
 
     <div class="card">
         <div style="padding: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
-            <h2 style="font-size: 1.5rem; color: #4f46e5; margin: 0;">Transaction History</h2>
+            <h2 style="font-size: 1.5rem; color: #667eea; margin: 0;">Transaction History</h2>
         </div>
         
         <% if (client.paymentHistory && client.paymentHistory.length > 0) { %>
@@ -55,11 +55,11 @@
                 </table>
             </div>
         <% } else { %>
-            <div style="padding: 3rem; text-align: center;">
+            <div style="padding: 3rem; text-center;">
                 <div style="color: rgba(255, 255, 255, 0.7);">
                     <div style="font-size: 4rem; margin-bottom: 1rem;">💳</div>
                     <p style="font-size: 1.25rem; margin-bottom: 1rem;">No payment history found</p>
-                    <p>You haven't made any payments yet. <a href="/client/dashboard" style="color: #4f46e5;">Browse properties</a> to get started.</p>
+                    <p>You haven't made any payments yet. <a href="/client/dashboard" style="color: #667eea;">Browse properties</a> to get started.</p>
                 </div>
             </div>
         <% } %>
@@ -67,7 +67,7 @@
 
     <!-- Summary Card -->
     <div class="card" style="margin-top: 2rem;">
-        <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #4f46e5;">📊 Payment Summary</h3>
+        <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #667eea;">📊 Payment Summary</h3>
         <div class="stats-grid">
             <div class="stat-card">
                 <span class="stat-icon">📊</span>

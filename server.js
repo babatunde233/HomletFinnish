@@ -50,6 +50,9 @@ app.use((req, res, next) => {
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// Ensure EJS is properly configured
+app.locals.include = require('ejs').render;
+
 const User = require('./models/User');
 const Property = require('./models/Property');
 const Deal = require('./models/Deal');
