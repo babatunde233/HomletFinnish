@@ -1,5 +1,40 @@
 // Main JavaScript file for HomLet
 
+// Preloader
+window.addEventListener('load', function() {
+    const preloader = document.getElementById('preloader');
+    setTimeout(() => {
+        preloader.classList.add('hidden');
+    }, 1500);
+});
+
+// Theme toggle functionality
+function toggleTheme() {
+    const body = document.body;
+    const themeToggle = document.getElementById('themeToggle');
+    
+    body.classList.toggle('light-mode');
+    
+    if (body.classList.contains('light-mode')) {
+        themeToggle.textContent = '☀️';
+        localStorage.setItem('theme', 'light');
+    } else {
+        themeToggle.textContent = '🌙';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Load saved theme
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    const themeToggle = document.getElementById('themeToggle');
+    
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        if (themeToggle) themeToggle.textContent = '☀️';
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all JavaScript functionality
     initializeAlerts();
